@@ -755,6 +755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 655991798}
+  posBlock: {fileID: 1066134058}
   posPlayer: {fileID: 1583053566}
 --- !u!1 &943881023
 GameObject:
@@ -938,7 +939,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "x: 1\u043C\ny: 1\u043C\nscale: 1\u043C"
+  m_Text: "\u043F\u043E\u0437\u0438\u0446\u0438\u044F \u0431\u043B\u043E\u043A\u0430\nx:
+    1\u043C\ny: 1\u043C\nscale: 1\u043C"
 --- !u!222 &1066134059
 CanvasRenderer:
   m_ObjectHideFlags: 0

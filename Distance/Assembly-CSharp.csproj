@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\DistanseCube.cs" />
     <Compile Include="Assets\Scripts\DrivePlayer.cs" />
+    <Compile Include="Assets\Scripts\Luch.cs" />
     <Reference Include="UnityEngine.Purchasing">
       <HintPath>D:/Projects/SaziObj/Distance/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
     </Reference>

@@ -26,9 +26,11 @@ public class DistanseCube : MonoBehaviour
         posPlayer.text = "позиция камеры: \n" + player.position.ToString() + "\n";
         posPlayer.text += "дистанция от камеры: \n" + Vector3.Distance(player.position, transform.position) + " м\n";
         posPlayer.text += visible ? "объект виден" : "объект не виден";
+
     }
 
-    private void OnBecameVisible()
+
+private void OnBecameVisible()
     {
         visible = true;
     }

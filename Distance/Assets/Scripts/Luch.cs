@@ -71,6 +71,8 @@ public class Luch : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             Ray ray1;
+            Ray ray2;
+            Ray ray3;
             Vector3 rotation = new Vector3(transform.forward.x, transform.forward.y, transform.forward.z);
             ray1 = new Ray(this.transform.position, rotation); // создаем лучь в позиции камеры
             Debug.DrawRay(this.transform.position, rotation * 50f, Color.green); // отрисовка луча начальные кординаты и цвет

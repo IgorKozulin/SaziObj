@@ -1169,9 +1169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6b5b22c3b546c439149849838437ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: Lush.json
-  SIZE_X: 7
-  SIZE_Y: 7
+  SIZE_X: 10
+  SIZE_Y: 10
   deltaRotation: 100
 --- !u!1 &1193701997
 GameObject:

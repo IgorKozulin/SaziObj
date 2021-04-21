@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Newtonsoft.Json;
 
 public class Luch : MonoBehaviour
 {
-    public string fileName;
     public int SIZE_X = 100;
     public int SIZE_Y = 100;
     public int deltaRotation = 500;
 
     private RaycastHit hit;
     private Ray[,] ray;
-
     private double dX;
     private double dY;
-
     private double positionStartX;
     private double positionStartY;
     private List<LuchPosition> luchPositions = new List<LuchPosition>();
@@ -25,61 +22,38 @@ public class Luch : MonoBehaviour
         ray = new Ray[SIZE_X, SIZE_Y];
         positionStartX = SIZE_X / 2;
         positionStartY = SIZE_Y / 2;
-
-        if (fileName == "")
-        {
-            fileName = "Data/Luch.json";
-        }
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            StreamWriter sw = new StreamWriter(fileName);
-            string text;
+            luchPositions.Clear();
             for (int i = 0; i < SIZE_X; i++)
             {
-                text = "";
                 for (int j = 0; j < SIZE_Y; j++)
                 {
                     dX = (double)SIZE_X / deltaRotation;
                     dY = (double)SIZE_Y / deltaRotation;
                     Vector3 rotation = new Vector3(transform.forward.x - (float)(positionStartX*dX) + (float)dX*i, transform.forward.y - (float)(positionStartY * dY) + (float)dY*j, transform.forward.z);
-                    ray[i,j] = new Ray(this.transform.position, rotation); // создаем лучь в позиции камеры
-                    Debug.DrawRay(this.transform.position, rotation * 50f, Color.red); // отрисовка луча начальные кординаты и цвет
+                    ray[i,j] = new Ray(this.transform.position, rotation);
+                    Debug.DrawRay(this.transform.position, rotation * 50f, Color.red);
 
                     if (Physics.Raycast(ray[i, j], out hit))
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            print("point  " + hit.point);
-                        }
-                        text += (float)hit.distance + " " + difference(ray[i, j].origin.x, hit.point.x) + " " + difference(ray[i, j].origin.y, hit.point.y) + " | ";
+                        luchPositions.Add(new LuchPosition((float)hit.distance, (float)difference(ray[i, j].origin.x, hit.point.x), (float)difference(ray[i, j].origin.y, hit.point.y)));
                     }
                     else
                     {
-                        text += "null | ";
+                        luchPositions.Add(new LuchPosition(100000, 100000, 100000));
                     }
                 }
-                sw.WriteLineAsync(text);
             }
-            sw.Close();
-        }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Ray ray1;
-            Vector3 rotation = new Vector3(transform.forward.x, transform.forward.y, transform.forward.z);
-            ray1 = new Ray(transform.position, rotation);
-            Vector3 rotation2 = new Vector3(transform.forward.x + 0.1f, transform.forward.y, transform.forward.z);
-
-            if (Physics.Raycast(ray1, out hit))
-            {
-                print("point " + hit.point);
-                print("orign " + ray1.origin);
-                print("dx=" + (float)hit.distance + " dy=" + difference(ray1.origin.x, hit.point.x) + " dz=" + difference(ray1.origin.y, hit.point.y));
-            }
+            string t = JsonConvert.SerializeObject(luchPositions);
+            File.WriteAllText("Data/json.json", t);
+            ScreenCapture.CaptureScreenshot("Data/Screenshot.png");
+            Debug.Log("Успешно");
         }
     }
 
@@ -95,7 +69,6 @@ public class Luch : MonoBehaviour
         }
     }
 }
-
 
 public class LuchPosition
 {

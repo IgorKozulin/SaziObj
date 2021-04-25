@@ -15,6 +15,7 @@ public class Luch : MonoBehaviour
     private double dY;
     private double positionStartX;
     private double positionStartY;
+    private int curTime;
     private List<LuchPosition> luchPositions = new List<LuchPosition>();
 
     void Start()
@@ -28,6 +29,7 @@ public class Luch : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Debug.Log("Загрузка ...");
             luchPositions.Clear();
             for (int i = 0; i < SIZE_X; i++)
             {
@@ -49,10 +51,10 @@ public class Luch : MonoBehaviour
                     }
                 }
             }
-
+            curTime = (int)Time.time;
             string t = JsonConvert.SerializeObject(luchPositions);
-            File.WriteAllText("Data/json.json", t);
-            ScreenCapture.CaptureScreenshot("Data/Screenshot.png");
+            File.WriteAllText("Data/json_"+ curTime + ".json", t);
+            ScreenCapture.CaptureScreenshot("Data/Screenshot_"+ curTime + ".png");
             Debug.Log("Успешно");
         }
     }

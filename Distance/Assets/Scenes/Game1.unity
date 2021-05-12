@@ -1169,9 +1169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6b5b22c3b546c439149849838437ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SIZE_X: 320
-  SIZE_Y: 240
-  deltaRotation: 500
+  SIZE_X: 200
+  SIZE_Y: 200
+  deltaRotation: 10000
 --- !u!1 &1193701997
 GameObject:
   m_ObjectHideFlags: 0

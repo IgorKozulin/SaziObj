@@ -38,9 +38,15 @@ public class Luch : MonoBehaviour
             getScreenShot(curTime);
             //ScreenCapture.CaptureScreenshot("Data/Screenshot_" + curTime + ".png");
 
-            tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-            tex.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-            tex.Apply();
+            Camera camera = GetComponent<Camera>();
+            int w = camera.pixelWidth / 2 - SIZE_X / 2;
+            int h = camera.pixelHeight / 2 - SIZE_Y / 2;
+            camera.targetTexture = RenderTexture.GetTemporary(SIZE_X, SIZE_Y, 16);
+
+            RenderTexture renderTexture = camera.targetTexture;
+
+            tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(w, h, renderTexture.width, renderTexture.height), 0, 0);
 
             luchPositions.Clear();
             for (int i = 0; i < SIZE_X; i++)
@@ -84,11 +90,17 @@ public class Luch : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-            tex.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-            tex.Apply();
+            Camera camera = GetComponent<Camera>();
+            int w = camera.pixelWidth / 2 - SIZE_X / 2;
+            int h = camera.pixelHeight / 2 - SIZE_Y / 2;
+            camera.targetTexture = RenderTexture.GetTemporary(SIZE_X, SIZE_Y, 16);
+
+            RenderTexture renderTexture = camera.targetTexture;
+
+            tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(w, h, renderTexture.width, renderTexture.height), 0, 0);
 
             Vector3 rotation = new Vector3(transform.forward.x, transform.forward.y, transform.forward.z);
             rayTest = new Ray(this.transform.position, rotation);
@@ -100,11 +112,40 @@ public class Luch : MonoBehaviour
                 color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
                 print(color);
             }
+
+            RenderTexture.ReleaseTemporary(renderTexture);
+            camera.targetTexture = null;
         }
 
         if (Input.GetKeyDown(KeyCode.P))
         {
-            getScreenShot(System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss"));
+            curTime = System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss");
+            getScreenShot(curTime);
+
+
+            Camera camera = GetComponent<Camera>();
+            int w = camera.pixelWidth / 2 - SIZE_X / 2;
+            int h = camera.pixelHeight / 2 - SIZE_Y / 2;
+            camera.targetTexture = RenderTexture.GetTemporary(SIZE_X, SIZE_Y, 16);
+
+            RenderTexture renderTexture = camera.targetTexture;
+
+            tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(w, h, renderTexture.width, renderTexture.height), 0, 0);
+
+            Vector3 rotation = new Vector3(transform.forward.x, transform.forward.y, transform.forward.z);
+            rayTest = new Ray(this.transform.position, rotation);
+            Debug.DrawRay(this.transform.position, rotation * 50f, Color.red);
+
+            if (Physics.Raycast(rayTest, out hit))
+            {
+                print(hit.point.x);
+                color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
+                print(color);
+            }
+
+            RenderTexture.ReleaseTemporary(renderTexture);
+            camera.targetTexture = null;
         }
     }
 
@@ -145,14 +186,18 @@ public class LuchPosition
     public float x;
     public float y;
     public float z;
-    public ColorObj color;
+    public int r;
+    public int g;
+    public int b;
 
     public LuchPosition(float x, float y, float z, int r, int g, int b)
     {
         this.x = x;
         this.y = y;
         this.z = z;
-        color = new ColorObj(r, g, b);
+        this.r = r;
+        this.g = g;
+        this.b = b;
     }
 }
 

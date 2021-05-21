@@ -24,6 +24,7 @@ public class Luch : MonoBehaviour
     public Texture2D heightmap;
     public Vector3 size = new Vector3(100, 10, 100);
     public GameObject ColorObj;
+    public GameObject[] cube;
 
     void Start()
     {
@@ -90,29 +91,63 @@ public class Luch : MonoBehaviour
             }
         }
 
-        //
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
             Camera camera = GetComponent<Camera>();
-            int w = camera.pixelWidth / 2 - SIZE_X / 2;
-            int h = camera.pixelHeight / 2 - SIZE_Y / 2;
-            camera.targetTexture = RenderTexture.GetTemporary(SIZE_X, SIZE_Y, 16);
+            int w = camera.pixelWidth / 2 - SIZE_X / 2; // начало отрисовку по ширине
+            int h = camera.pixelHeight / 2 - SIZE_Y / 2; // начало отрисовку по высоте
+            camera.targetTexture = RenderTexture.GetTemporary(SIZE_X, SIZE_Y, 16); // создаем текстуру от камеры ао разменам
 
             RenderTexture renderTexture = camera.targetTexture;
 
             tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
-            tex.ReadPixels(new Rect(w, h, renderTexture.width, renderTexture.height), 0, 0);
+            tex.ReadPixels(new Rect(w, h, renderTexture.width, renderTexture.height), 0, 0); // рисуем по цетру
 
             Vector3 rotation = new Vector3(transform.forward.x, transform.forward.y, transform.forward.z);
             rayTest = new Ray(this.transform.position, rotation);
-            Debug.DrawRay(this.transform.position, rotation * 50f, Color.red);
-
+            Debug.DrawRay(this.transform.position, rotation * 50f, Color.yellow);
             if (Physics.Raycast(rayTest, out hit))
             {
-                print(hit.point.x);
+                //print(hit.point.x + " " + hit.point.y);
                 color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
-                print(color);
+                // print(color);
+                ColorObj.GetComponent<Renderer>().material.color = color;
             }
+            // пробую создать 4 луча
+
+            //rotation = new Vector3(transform.forward.x + 0.1f, transform.forward.y + 0.1f, transform.forward.z);
+            //rayTest = new Ray(this.transform.position, rotation);
+            //Debug.DrawRay(this.transform.position, rotation * 50f, Color.yellow);
+
+            //if (Physics.Raycast(rayTest, out hit))
+            //{
+            //    print(hit.point.x + " " + hit.point.y);
+            //    color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
+            //    // print(color);
+            //    cube[1].GetComponent<Renderer>().material.color = color;
+            //}
+            //rotation = new Vector3(transform.forward.x - 0.1f, transform.forward.y - 0.1f, transform.forward.z);
+            //rayTest = new Ray(this.transform.position, rotation);
+            //Debug.DrawRay(this.transform.position, rotation * 50f, Color.yellow);
+
+            //if (Physics.Raycast(rayTest, out hit))
+            //{
+            //    print(hit.point.x + " " + hit.point.y);
+            //    color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
+            //    // print(color);
+            //    cube[2].GetComponent<Renderer>().material.color = color;
+            //}
+            //rotation = new Vector3(transform.forward.x + 0.1f, transform.forward.y - 0.1f, transform.forward.z);
+            //rayTest = new Ray(this.transform.position, rotation);
+            //Debug.DrawRay(this.transform.position, rotation * 50f, Color.yellow);
+
+            //if (Physics.Raycast(rayTest, out hit))
+            //{
+            //    print(hit.point.x + " " + hit.point.y);
+            //    color = tex.GetPixel((int)hit.point.x, (int)hit.point.y);
+            //    // print(color);
+            //    cube[3].GetComponent<Renderer>().material.color = color;
+            //}
 
             RenderTexture.ReleaseTemporary(renderTexture);
             camera.targetTexture = null;
@@ -162,12 +197,6 @@ public class Luch : MonoBehaviour
             Color32 bla = tex.GetPixel((int)mpos.x, (int)mpos.y);
             print(mpos.x.GetType());
             ColorObj.GetComponent<Renderer>().material.color = bla;
-        }
-
-        // вывод цвета по левой кнопки мыши
-        if (Input.GetKeyDown(KeyCode.Mouse3))
-        {
-
         }
     }
 

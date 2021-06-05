@@ -23,11 +23,12 @@ public class Luchs : MonoBehaviour
     private Color32 color;
     private List<LuchPosition> luchPositions = new List<LuchPosition>();
     private string textJson;
-    
+    private int count;
+
     void Start()
     {
-        NUM_X = 10;  // число лучей по оси X
-        NUM_Y = 10;  // число лучей по оси Y
+        NUM_X = 200;  // число лучей по оси X
+        NUM_Y = 200;  // число лучей по оси Y
         Angle_X = 45; // угол исходящих лучей из камеры по оси X
         Angle_Y = 45; // угол исходящих лучей из камеры по оси X
 
@@ -39,7 +40,7 @@ public class Luchs : MonoBehaviour
         if (NUM_Y <= 1) { dY = 0; Length_Y = 0; } // просмотр одного луча
 
         ray = new Ray[NUM_X, NUM_Y];
-        // count = 0;
+        count = 0;
     }
 
     void Update()
@@ -51,8 +52,6 @@ public class Luchs : MonoBehaviour
 
             textJson = "";
             curTime = System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss"); // сохраняем дату для записи файла как имя
-            //getScreenShot(curTime); // функция возвращая скриншет
-            //ScreenCapture.CaptureScreenshot("Data/Screenshot_" + curTime + ".png"); // скриншет всего экрана
 
             Camera camera = GetComponent<Camera>();
             int resWidth = Screen.width;
@@ -64,7 +63,7 @@ public class Luchs : MonoBehaviour
             RenderTexture.active = rt;
             screenShot.ReadPixels(new Rect(0, 0, resWidth, resHeight), 0, 0); //Apply pixels from camera onto Texture2D
             byte[] byteArray = screenShot.EncodeToPNG();
-            File.WriteAllBytes("Data/Screenshot_" + curTime + ".png", byteArray);
+            File.WriteAllBytes("Data/All_Screenshot_" + count + ".png", byteArray);
 
 
             luchPositions.Clear();
@@ -82,12 +81,12 @@ public class Luchs : MonoBehaviour
                         color = screenShot.GetPixel((int)screenPos.x, (int)screenPos.y);
                         //Debug.Log("color=" + color + " х(" + screenPos.x + ") y(" + screenPos.y + ") - Позиция точки попадания луча из центра камеры на экране");
                         luchPositions.Add(new LuchPosition((float)hit.distance, (float)(ray[i, j].origin.x - hit.point.x), (float)(hit.point.y - ray[i, j].origin.y), color.r, color.g, color.b));
-                        textJson += (float)hit.distance + " " + (ray[i, j].origin.x - hit.point.x) + " " + (float)(hit.point.y - ray[i, j].origin.y) + " " + color.r + " " + color.g + " " + color.b + ", ";
+                        // textJson += (float)hit.distance + " " + (ray[i, j].origin.x - hit.point.x) + " " + (float)(hit.point.y - ray[i, j].origin.y) + " " + color.r + " " + color.g + " " + color.b + ", ";
                     }
                     else
                     {
                         luchPositions.Add(new LuchPosition(100000, 100000, 100000, 10000, 10000, 10000));
-                        textJson += 1000 + " " + 1000 + " " + 1000 + " " + 1000 + " " + 1000 + " " + 1000 + ", ";
+                        // textJson += 1000 + " " + 1000 + " " + 1000 + " " + 1000 + " " + 1000 + " " + 1000 + ", ";
                     }
                 }
             }
@@ -96,10 +95,11 @@ public class Luchs : MonoBehaviour
             Destroy(rt); //Free memory
 
             string t = JsonConvert.SerializeObject(luchPositions);
-            File.WriteAllText("Data/json_" + curTime + ".json", t);
-            File.WriteAllText("Data/txt_" + curTime + ".txt", textJson);
+            File.WriteAllText("Data/json_" + count + ".json", t);
+            //File.WriteAllText("Data/txt_" + curTime + ".txt", textJson);
+            getScreenShot(count.ToString()); // функция возвращая скриншет
             Debug.Log("Успешно");
-            //count++; //счетчик числа файлов    
+            count++; //счетчик числа файлов
         }
 
         // просмотр лучей (тест)
@@ -115,6 +115,12 @@ public class Luchs : MonoBehaviour
                     Debug.DrawRay(this.transform.position, rotation * 100f, Color.red);// здесь 100f - это длина лучей
                 }
             }
+        }
+
+        // просмотр лучей (тест)
+        if (Input.GetKey(KeyCode.O))
+        {
+            getScreenShot("111"); // функция возвращая скриншет
         }
     }
 
@@ -151,3 +157,5 @@ public class Luchs : MonoBehaviour
         }
     }
 }
+
+//ScreenCapture.CaptureScreenshot("Data/Screenshot_" + curTime + ".png"); // скриншет всего экрана

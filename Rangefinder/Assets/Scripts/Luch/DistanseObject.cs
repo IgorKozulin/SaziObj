@@ -7,37 +7,38 @@ using UnityEngine.UI;
 public class DistanseObject : MonoBehaviour
 {
     public Transform player;
-    public Text posBlock;
-    public Text posPlayer;
+    public string figureName;
 
     private bool visible = false;
-    // private int count;
+    private int count;
     private string curTime;
 
     void Update()
     {
-        //posBlock.text = "позиция блока: \n" + this.transform.position.ToString() + "\n";
-        //posBlock.text += "длина = " + this.transform.localScale.x.ToString() + "\n";
-        //posBlock.text += "ширина = " + this.transform.localScale.y.ToString() + "\n";
-        //posBlock.text += "высота = " + this.transform.localScale.z.ToString() + "\n";
-
-        //posPlayer.text = "позиция камеры: \n" + player.position.ToString() + "\n";
-        //posPlayer.text += "дистанция от камеры: \n" + Vector3.Distance(player.position, transform.position) + " м\n";
-        //posPlayer.text += visible ? "объект виден" : "объект не виден";
-
         if (Input.GetKeyDown(KeyCode.R))
         {
-            curTime = System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss"); // сохраняем дату для записи файла как имя
+            curTime = System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss");
 
             string text = "";
-            text += visible ? "объект виден \n" : "объект не виден \n";
-            text += "позиция блока: \n" + this.transform.position.ToString() + "\n";
-            text += "длина объекта = " + this.transform.localScale.x.ToString() + "\n";
-            text += "ширина объекта = " + this.transform.localScale.y.ToString() + "\n";
-            text += "высота объекта = " + this.transform.localScale.z.ToString() + "\n";
+            text += this.transform.position.x.ToString() + " ";
+            text += this.transform.position.y.ToString() + " ";
+            text += this.transform.position.z.ToString() + " ";
+            text += this.transform.localScale.x.ToString() + " ";
+            text += this.transform.localScale.y.ToString() + " ";
+            text += this.transform.localScale.z.ToString() + " ";
+            text += figureName + " ";
+            text += "u1 w1 u1 w2";
 
-            File.WriteAllText("Data/obj_" + curTime + ".txt", text);
-            // count++;
+
+            text += visible ? "объект виден \n" : "объект не виден \n";
+
+            File.WriteAllText("Data/obj_" + count + ".txt", text);
+            count++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            print(getRotateObj());
         }
     }
 
@@ -49,5 +50,50 @@ public class DistanseObject : MonoBehaviour
     private void OnBecameInvisible()
     {
         visible = false;
+    }
+
+    private string getRotateObj()
+    {
+        var rObj = Vector3.Angle(Vector3.forward, gameObject.transform.forward);
+        var rCamera = Vector3.Angle(Vector3.forward, player.transform.forward);
+
+        if (rObj >= 0)
+        {
+            if (rObj >= 45 && rObj < 135)
+            {
+                return "->";
+            }
+            else if (rObj >= 135 && rObj <= 225)
+            {
+                return "^";
+            }
+            else if (rObj > 225 && rObj <= 315)
+            {
+                return ("<-");
+            }
+            else
+            {
+                return ("на камеру");
+            }
+        }
+        else
+        {
+            if (rObj >= -45 && rObj < -135)
+            {
+                return "<-";
+            }
+            else if (rObj >= -135 && rObj <= -225)
+            {
+                return "^";
+            }
+            else if (rObj > -225 && rObj <= -315)
+            {
+                return ("->");
+            }
+            else
+            {
+                return ("на камеру");
+            }
+        }
     }
 }

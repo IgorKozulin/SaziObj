@@ -67,4 +67,10 @@ public class DrivePlayer : MonoBehaviour
 
         controller.Move((transform.right * x + transform.forward * z) * speed * Time.deltaTime);
     }
+
+    // определяет в какую сторону смотрит объект
+    private void rotateObj()
+    {
+
+    }
 }

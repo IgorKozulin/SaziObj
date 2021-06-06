@@ -50,6 +50,7 @@ public class DistanseObject : MonoBehaviour
     {
         double rObj = transform.rotation.eulerAngles.y;
 
+
         // если задан начальный угл
         if (rObj + startAngleObj > 360)
         {
@@ -81,3 +82,6 @@ public class DistanseObject : MonoBehaviour
 }
 
 // var rObj = Vector3.Angle(Vector3.forward, gameObject.transform.forward); // модуль угла
+
+//var r = player.transform.rotation.eulerAngles;
+//print(r);

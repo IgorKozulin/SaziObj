@@ -56,8 +56,9 @@
     <Compile Include="Assets\Scripts\Luch\Luchs.cs" />
     <Compile Include="Assets\Scripts\Luch\DistanseObject.cs" />
     <Compile Include="Assets\Scripts\Luch\LuchTest.cs" />
-    <Compile Include="Assets\Scripts\Player\DrivePlayer.cs" />
     <Compile Include="Assets\Scripts\Luch\LuchPosition.cs" />
+    <Compile Include="Assets\Scripts\Player\DrivePlayer.cs" />
+    <Compile Include="Assets\Scripts\Luch\VisibleCenterObj.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\JsonDotNet\link.xml" />

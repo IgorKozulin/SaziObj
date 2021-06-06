@@ -19,7 +19,7 @@ public class DrivePlayer : MonoBehaviour
     void Start()
     {
         controller = playerBody.GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked; // чтобы курсора небыло видно
+        // Cursor.lockState = CursorLockMode.Locked; // чтобы курсора небыло видно
     }
 
     void Update()

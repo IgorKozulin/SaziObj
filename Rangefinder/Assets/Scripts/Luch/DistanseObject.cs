@@ -6,8 +6,13 @@ using UnityEngine.UI;
 
 public class DistanseObject : MonoBehaviour
 {
+    [Tooltip("Transform камеры")]
     public Transform player;
+    [Tooltip("Имя фигнуры, например 'Cube'")]
     public string figureName;
+    [Tooltip("Задаем начальный угл по часовой стрелке от 0 до 360")]
+    [Range(0, 360)]
+    public int startAngleObj;
 
     private bool visible = false;
     private int count;
@@ -15,7 +20,7 @@ public class DistanseObject : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && VisibleCenterObj.visible)
         {
             curTime = System.DateTime.Now.ToString("dd-mm-yyyy hh-mm-ss");
 
@@ -28,9 +33,7 @@ public class DistanseObject : MonoBehaviour
             text += this.transform.localScale.z.ToString() + " ";
             text += figureName + " ";
             text += "u1 w1 u1 w2";
-
-
-            text += visible ? "объект виден \n" : "объект не виден \n";
+            text += getRotateObj();
 
             File.WriteAllText("Data/obj_" + count + ".txt", text);
             count++;
@@ -42,58 +45,39 @@ public class DistanseObject : MonoBehaviour
         }
     }
 
-    private void OnBecameVisible()
-    {
-        visible = true;
-    }
-
-    private void OnBecameInvisible()
-    {
-        visible = false;
-    }
-
+    // функция возвращает куда смотрит фигура
     private string getRotateObj()
     {
-        var rObj = Vector3.Angle(Vector3.forward, gameObject.transform.forward);
-        var rCamera = Vector3.Angle(Vector3.forward, player.transform.forward);
+        double rObj = transform.rotation.eulerAngles.y;
 
-        if (rObj >= 0)
+        // если задан начальный угл
+        if (rObj + startAngleObj > 360)
         {
-            if (rObj >= 45 && rObj < 135)
-            {
-                return "->";
-            }
-            else if (rObj >= 135 && rObj <= 225)
-            {
-                return "^";
-            }
-            else if (rObj > 225 && rObj <= 315)
-            {
-                return ("<-");
-            }
-            else
-            {
-                return ("на камеру");
-            }
+            rObj = (rObj + startAngleObj) % 360;
         }
         else
         {
-            if (rObj >= -45 && rObj < -135)
-            {
-                return "<-";
-            }
-            else if (rObj >= -135 && rObj <= -225)
-            {
-                return "^";
-            }
-            else if (rObj > -225 && rObj <= -315)
-            {
-                return ("->");
-            }
-            else
-            {
-                return ("на камеру");
-            }
+            rObj += startAngleObj;
+        }
+
+        // определяем куда смотрит объект
+        if (rObj >= 45 && rObj < 135)
+        {
+            return "<-";
+        }
+        else if (rObj >= 135 && rObj <= 225)
+        {
+            return "^";
+        }
+        else if (rObj > 225 && rObj <= 315)
+        {
+            return ("->");
+        }
+        else
+        {
+            return ("на камеру");
         }
     }
 }
+
+// var rObj = Vector3.Angle(Vector3.forward, gameObject.transform.forward); // модуль угла
